@@ -4,22 +4,20 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-void Choose();
-void ClientTCP(unsigned short Port);
-void ServerTCP(unsigned short Port);
-
-const unsigned short Port = 1234;
+void Choose(int Port);
+void ClientTCP(int Port);
+void ServerTCP(int Port);
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works... ONLINE?!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
-
+    int Port = 1234;
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event)){
-            Choose();
+            Choose(Port);
             
             if (event.type == sf::Event::Closed){
                 window.close();
@@ -34,7 +32,7 @@ int main()
     return 0;
 }
 
-void Choose(){
+void Choose(int Port){
   char vem; 
   std::cout << "Skriv porten på servern du vill ansluta till:";
   std::cin >> Port; 
@@ -42,14 +40,14 @@ void Choose(){
   std::cin >> vem;
  
   if (vem == 's'){ 
-    ServerTCP(unsigned short Port); 
+    ServerTCP(Port); 
   } 
   else{
-    ClientTCP(unsigned short Port); 
+    ClientTCP(Port); 
   } 
 }
-//______________________________________________________________________________
-void ClientTCP(unsigned short Port){
+//___________________________________________________________________
+void ClientTCP(int Port){
   sf::IpAddress ServerAddress;
   char Send[50] = "Hejs svejs i cyberspace!";
 
@@ -65,8 +63,8 @@ void ClientTCP(unsigned short Port){
     std::cout << "failed to send message" << std::endl;
   }
 }
-//_______________________________________________________________________________-
-void ServerTCP(unsigned short Port){
+//___________________________________________________________________
+void ServerTCP(int Port){
   sf::TcpListener listener;
 
   if(listener.listen(Port) != sf::Socket::Done){
