@@ -3,11 +3,15 @@
 #include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <string>
 
 void Choose(int Port);
 void ClientTCP(int Port);
 void ServerTCP(int Port);
-
+void receivemess();
+std::size_t received;
+char storage[2000];
+sf::TcpSocket socket;
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works... ONLINE?!");
@@ -18,7 +22,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event)){
             Choose(Port);
-            
+            receivemess();
             if (event.type == sf::Event::Closed){
                 window.close();
             }
@@ -49,30 +53,28 @@ void Choose(int Port){
 //___________________________________________________________________
 void ClientTCP(int Port){
   sf::IpAddress ServerAddress;
-  char Send[50] = "Hejs svejs i cyberspace!";
+  std::string SendC = "Hejs svejs i cyberspace!";
 
   std::cout << "Skriv addressen på servern du vill ansluta till:";
   std::cin >> ServerAddress;
-  sf::TcpSocket socket;
-  sf::Socket::Status status = socket.connect(ServerAddress, Port);
-  if(status != sf::Socket::Done){
-    std::cout << "failed to connect the server" << std::endl;
-  }
-  status;
-  if(socket.send(Send, 50) != sf::Socket::Done){
-    std::cout << "failed to send message" << std::endl;
-  }
+
+  socket.connect(ServerAddress, Port);
+
+  socket.send(SendC.c_str(), SendC.length() + 1);
 }
 //___________________________________________________________________
 void ServerTCP(int Port){
+  sf::IpAddress = sf::IpAddress::getLocalAddress();
+  std::string SendS = "You hacked it to the server!";
   sf::TcpListener listener;
 
-  if(listener.listen(Port) != sf::Socket::Done){
-    std::cout << "error" << std::endl;
-  }
-  sf::TcpSocket Client;
-  if(listener.accept(Client) != sf::Socket::Done){
-    std::cout << "errbor" << std::endl;
-  }
+  listener.listen(Port);
+  listener.accept(socket);
+  socket.send(SendS.c_str(), SendS.length() + 1);
+}
+//______________________________________________________________________-
+void receivemess(){
 
+  socket.receive(storage, sizeof(storage), received);
+  std::cout << storage << std::endl;
 }
