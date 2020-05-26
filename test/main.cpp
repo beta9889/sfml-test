@@ -47,8 +47,7 @@ void client (int port){
 	else{
 		cout << "connected\n";
 	}
-	cout << "lägg till något för att ta emot ett medelande";
-	cin >> port;
+	cout << "Väntar på medelande";
 
 	char message[255];
 	size_t TaEmot;
