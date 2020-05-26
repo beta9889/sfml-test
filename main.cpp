@@ -5,28 +5,27 @@
 #include <SFML/Audio.hpp>
 #include <string>
 
-void Choose(unsigned short Port);
+void Choose();
 void ClientTCP(unsigned short Port);
 void ServerTCP(unsigned short Port);
-void receivemess();
 std::size_t received;
 char storage[2000];
-sf::TcpSocket socket;
+
 //__________________________________________________________________
 int main()
 {
-  unsigned short Port = 1234;
-  Choose(Port);
-  receivemess();
+  Choose();
+  std::cout << storage << std::endl;
+
+  system("pause");
 
   return 0;
    
 }
 //__________________________________________________________________
-void Choose(unsigned short Port){
+void Choose(){
+  unsigned short Port = 53000;
   char vem; 
-  std::cout << "Skriv porten på servern du vill ansluta till:";
-  std::cin >> Port; 
   std::cout << "Vill du vara server: 's' \nEller vill du vara en klient: 'k'"; 
   std::cin >> vem;
  
@@ -40,31 +39,36 @@ void Choose(unsigned short Port){
 //___________________________________________________________________
 void ClientTCP(unsigned short Port){
   sf::IpAddress ServerAddress;
-  std::string SendC = "Hejs svejs i cyberspace!";
+  sf::TcpSocket socket;
+  std::string SendK = "Hejs svejs i cyberspace!";
 
-  std::cout << "Skriv addressen på servern du vill ansluta till:";
+  std::cout << "Skriv addressen på servern du vill ansluta till:" << std::endl;
   std::cin >> ServerAddress;
 
-  socket.connect(ServerAddress, Port);
-
-  socket.send(SendC.c_str(), SendC.length() + 1);
+  sf::Socket::Status status = socket.connect(ServerAddress, Port);
+  if (status != sf::Socket::Done){
+    std::cout << "error \n";
+  }
+  else{
+    std::cout << "connected\n";
+    socket.send(SendK.c_str(), SendK.length() + 1);
+    socket.receive(storage, sizeof(storage), received);
+  }
 }
 //___________________________________________________________________
 void ServerTCP(unsigned short Port){
-  sf::IpAddress IP = sf::IpAddress::getLocalAddress();
-  std::cout << "Address: " << IP << std::endl;
+
   std::string SendS = "You hacked it to the server!";
   sf::TcpListener listener;
 
-  listener.listen(Port);
-  listener.accept(socket);
-  socket.send(SendS.c_str(), SendS.length() + 1);
+  if (listener.listen(Port) != sf::Socket::Done){
+    std::cout << "error listening\n";
+  }
+  sf::TcpSocket Koppling;
+  if (listener.accept(Koppling) != sf::Socket::Done){
+    std::cout << "error connection\n";
+  }
+  Koppling.send(SendS.c_str(), SendS.length() + 1);
+  Koppling.receive(storage, sizeof(storage), received);
 }
-//______________________________________________________________________-
-void receivemess(){
 
-  socket.receive(storage, sizeof(storage), received);
-  std::cout << storage << std::endl;
-
-  system("pause")
-}
