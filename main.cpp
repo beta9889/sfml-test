@@ -2,24 +2,28 @@
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 #include <string>
 
-void Choose(int Port);
-void ClientTCP(int Port);
-void ServerTCP(int Port);
+void Choose(unsigned short Port);
+void ClientTCP(unsigned short Port);
+void ServerTCP(unsigned short Port);
 void receivemess();
 std::size_t received;
 char storage[2000];
 sf::TcpSocket socket;
+//__________________________________________________________________
 int main()
 {
-    int Port = 1234;
-    Choose(Port);
-    receivemess();
-}
+  unsigned short Port = 1234;
+  Choose(Port);
+  receivemess();
 
-void Choose(int Port){
+  return 0;
+   
+}
+//__________________________________________________________________
+void Choose(unsigned short Port){
   char vem; 
   std::cout << "Skriv porten på servern du vill ansluta till:";
   std::cin >> Port; 
@@ -34,7 +38,7 @@ void Choose(int Port){
   } 
 }
 //___________________________________________________________________
-void ClientTCP(int Port){
+void ClientTCP(unsigned short Port){
   sf::IpAddress ServerAddress;
   std::string SendC = "Hejs svejs i cyberspace!";
 
@@ -46,7 +50,7 @@ void ClientTCP(int Port){
   socket.send(SendC.c_str(), SendC.length() + 1);
 }
 //___________________________________________________________________
-void ServerTCP(int Port){
+void ServerTCP(unsigned short Port){
   sf::IpAddress IP = sf::IpAddress::getLocalAddress();
   std::cout << "Address: " << IP << std::endl;
   std::string SendS = "You hacked it to the server!";
@@ -61,4 +65,6 @@ void receivemess(){
 
   socket.receive(storage, sizeof(storage), received);
   std::cout << storage << std::endl;
+
+  system("pause")
 }
