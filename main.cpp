@@ -29,7 +29,9 @@ void server (int port){
 	}
 	else {
 		cout << "it worked";
+
 	}
+	cin >> port;
 }
 //-------------------------------------------------------------------
 void client (int port){
