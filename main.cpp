@@ -17,7 +17,19 @@ void server (int port){
 		cout << "error connection\n";
 	}
 
-	cout << "function finished, connected?";
+	cout << "function finished, connected?\n";
+
+	char message[255];
+	cout << "what message do you want to send?\n";
+	cin >> message;
+
+	if(Koppling.send(message,255) != sf::Socket::Done){
+
+		cout << "doesn't work\n";
+	}
+	else {
+		cout << "it worked";
+	}
 }
 //-------------------------------------------------------------------
 void client (int port){
@@ -33,15 +45,23 @@ void client (int port){
 	else{
 		cout << "connected\n";
 	}	
+	char message[255];
+	size_t TaEmot;
+	if(socket.receive(message, 255, TaEmot) != sf::Socket::Done){
+		cout << "connected but no message recieved\n";
+	}
+	else{
+		cout << message;
+
+	}
 }
 //---------------------------------------------------------------------
 
 int main()
 { 
     
-    cout << "vilken port ? \n";
     int port;
-    cin >> port;
+    port = 53000;
 
     cout << "server (s)  eller klient (k)? \n";
     char resultat;
