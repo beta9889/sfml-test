@@ -31,7 +31,6 @@ void server (int port){
 		cout << "it worked";
 
 	}
-	cin.get();
 }
 //-------------------------------------------------------------------
 void client (int port){
@@ -50,6 +49,7 @@ void client (int port){
 
 	char message[255];
 	size_t TaEmot;
+
 	if(socket.receive(message, 255, TaEmot) != sf::Socket::Done){
 		cout << "error recieving message";
 	}
