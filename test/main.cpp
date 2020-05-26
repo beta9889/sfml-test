@@ -21,7 +21,7 @@ void server (int port){
 
 	char message[255];
 	cout << "what message do you want to send?\n";
-	cin.getline(message,255);
+	cin >> cin.getline(message,255);
 
 	if(Koppling.send(message,255) != sf::Socket::Done){
 
