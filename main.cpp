@@ -18,6 +18,7 @@ void client (int port){
 	cout << "vilken ip?\n";
 	sf::IpAddress ip;
 	cin >> ip;
+
 	sf::TcpSocket socket;
 	sf::Socket::Status status = socket.connect(ip,port);
 	if (status != sf::Socket::Done){
@@ -40,18 +41,17 @@ int main()
     char resultat;
     char null; 
     cin >> resultat;
-    resultat = null;
 
     if (resultat = 's'){
 	 server(port);
-	 
+	 resultat = null;
     }
     else if (resultat = 'k'){
-	client(port);	
-
+	client(port);		
+    	resultat = null;
     }
 
-
+/*
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
@@ -69,6 +69,6 @@ int main()
         window.draw(shape);
         window.display();
     }
-
+*/
     return 0;
 }
