@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <iostream>
-#include <thread>
+#include <string>
 using namespace std;
 void server (int port){
 	
@@ -19,11 +19,11 @@ void server (int port){
 
 	cout << "function finished, connected?\n";
 
-	char message[255];
+	string message;
 	cout << "what message do you want to send?\n";
 	cin >> message;
 
-	if(Koppling.send(message,255) != sf::Socket::Done){
+	if(Koppling.send(message,message.length()) != sf::Socket::Done){
 
 		cout << "doesn't work\n";
 	}
@@ -47,9 +47,9 @@ void client (int port){
 	else{
 		cout << "connected\n";
 	}	
-	char message[255];
+	string message;
 	size_t TaEmot;
-	if(socket.receive(message, 255, TaEmot) != sf::Socket::Done){
+	if(socket.receive(message, message.length(), TaEmot) != sf::Socket::Done){
 		cout << "connected but no message recieved\n";
 	}
 	else{
