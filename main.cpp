@@ -64,7 +64,8 @@ void ClientTCP(int Port){
 }
 //___________________________________________________________________
 void ServerTCP(int Port){
-  sf::IpAddress = sf::IpAddress::getLocalAddress();
+  sf::IpAddress IP = sf::IpAddress::getLocalAddress();
+  std::cout << "Address: " << IP << std::endl;
   std::string SendS = "You hacked it to the server!";
   sf::TcpListener listener;
 
