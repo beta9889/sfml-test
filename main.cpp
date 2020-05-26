@@ -6,12 +6,14 @@ using namespace std;
 void server (int port){
 	
     sf::TcpListener lyssnar;
-    	if (lyssnar.listen(port) != sf::Socket::Done){
-		    cout << "error \n";
-    	}
-    	else {
-		    cout << "connected\n";
-    	}
+    	while (lyssnar.listen(port) != sf::Socket::Done){
+		cout << "error \n";
+    		cout << "trying again \n";
+    		if (lyssnar.listen(port) == sf::Socket::Done) {
+			    cout << "connected\n";
+			    break;
+    		}
+	}
 }
 //-------------------------------------------------------------------
 void client (int port){
@@ -42,9 +44,9 @@ int main()
     char null; 
     cin >> resultat;
 
-    if (resultat = 's'){
+    if (resultat == 's'){
 	 server(port);
-	 resultat = null;
+	 resultat == null;
     }
     else if (resultat = 'k'){
 	client(port);		
