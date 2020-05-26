@@ -5,15 +5,19 @@
 using namespace std;
 void server (int port){
 	
-    sf::TcpListener lyssnar;
-    	while (lyssnar.listen(port) != sf::Socket::Done){
-		cout << "error \n";
-    		cout << "trying again \n";
-    		if (lyssnar.listen(port) == sf::Socket::Done) {
-			    cout << "connected\n";
-			    break;
-    		}
+	sf::TcpListener lyssnar;
+
+	
+	if (lyssnar.listen(port) != sf::Socket::Done){
+		cout << "error listening\n";
+    	}
+	
+	sf::TcpSocket Koppling;
+	if (lyssnar.accept(Koppling) != sf::Socket::Done){
+		cout << "error connection\n";
 	}
+
+	cout << "function finished, connected?";
 }
 //-------------------------------------------------------------------
 void client (int port){
