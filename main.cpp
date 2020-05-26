@@ -19,6 +19,7 @@ int main()
         window.draw(shape);
         window.display();
     }
+//frizt
 
     return 0;
 }
