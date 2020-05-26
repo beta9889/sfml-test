@@ -47,7 +47,6 @@ void client (int port){
 	else{
 		cout << "connected\n";
 	}
-	cout << "Väntar på medelande";
 
 	char message[255];
 	size_t TaEmot;
