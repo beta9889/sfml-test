@@ -1,27 +1,48 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <thread>
 using namespace std;
-
+void server (int port){
+	
+    sf::TcpListener lyssnar;
+    	if (lyssnar.listen(port) != sf::Socket::Done){
+		    cout << "error \n";
+    	}
+    	else {
+		    cout << "connected\n";
+    	}
+}
+void client (int port){
+	sf::TcpSocket socket;
+	sf::Socket::Status status = socket.connect(ip,port);
+	if (status != sf::Socket::Done){
+		cout << "error \n";
+	}
+	else{
+		cout << "connected\n";
+	}	
+}
 int main()
 { 
+    
+    cout << "vilken port ? \n";
+    int port;
+    cin >> port;
 
     cout << "server (s)  eller klient (k)? \n";
     char resultat;
     char null; 
     cin >> resultat;
     resultat = null;
+
     if (resultat = 's'){
-    	sf::TcpListener lyssnar;
-    	cout << "vilken port ? \n";
-    	int port;
-    	cin >> port;
-    	if (lyssnar.listen(port) != sf::Socket::Done){
-		    cout << "error \n";
-    	}
-    	else {
-		    cout << "connected";
-    	}
+	    std::thread connection (server,port);
+	   connection.join();
+    }
+    else if (resultat = 'k'){
+	client(port);	
+
     }
 /*
 
