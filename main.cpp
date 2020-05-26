@@ -14,26 +14,9 @@ char storage[2000];
 sf::TcpSocket socket;
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works... ONLINE?!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
     int Port = 1234;
-    while (window.isOpen()){
-        sf::Event event;
-        while (window.pollEvent(event)){
-            Choose(Port);
-            receivemess();
-            if (event.type == sf::Event::Closed){
-                window.close();
-            }
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
-
-    return 0;
+    Choose(Port);
+    receivemess();
 }
 
 void Choose(int Port){
