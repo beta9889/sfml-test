@@ -9,12 +9,12 @@ void server (int port){
 
 	
 	if (lyssnar.listen(port) != sf::Socket::Done){
-		cout << "error listening\n";
+		cout << "error listening "<< sf::Socket::Done<< endl;
     	}
 	
 	sf::TcpSocket Koppling;
 	if (lyssnar.accept(Koppling) != sf::Socket::Done){
-		cout << "error connection\n";
+		cout << "error connecting " <<sf::Socket::Done<< endl;
 	}
 
 	cout << "function finished, connected?\n";
@@ -25,7 +25,7 @@ void server (int port){
 
 	if(Koppling.send(message,255) != sf::Socket::Done){
 
-		cout << "doesn't work\n";
+		cout << sf::Socket::Done;
 	}
 	else {
 		cout << "it worked";
@@ -42,15 +42,18 @@ void client (int port){
 	sf::TcpSocket socket;
 	sf::Socket::Status status = socket.connect(ip,port);
 	if (status != sf::Socket::Done){
-		cout << "error \n";
+		cout << sf::Socket::Done;
 	}
 	else{
 		cout << "connected\n";
-	}	
+	}
+	cout << "lägg till något för att ta emot ett medelande";
+	cin >> port;
+
 	char message[255];
 	size_t TaEmot;
 	if(socket.receive(message, 255, TaEmot) != sf::Socket::Done){
-		cout << "connected but no message recieved\n";
+		cout << sf::Socket::Done;
 	}
 	else{
 		cout << message;
