@@ -4,6 +4,9 @@
 #include <string>
 #include <cstring>
 using namespace std;
+
+//---------------------------------------------------------------------------
+
 void server (int port){
 	
 	sf::TcpListener lyssnar;
@@ -20,20 +23,24 @@ void server (int port){
 
 	cout << "function finished, connected?\n";
 
-	char message[255];
 	cout << "what message do you want to send?\n";
-	cin.getline(message,255);
+	char message[256];
+	
+	cin.getline(message,256);
 
-	if(Koppling.send(message,255) != sf::Socket::Done){
+	if(Koppling.send(message,256) != sf::Socket::Done){
 
 		cout << "error sending message";
 	}
 	else {
-		cout << "it worked";
+		cout << "it worked\n";
 
 	}
+	cout << "enter e to exit the program\n";
+	cin.ignore(1000,'e');
 }
 //-------------------------------------------------------------------
+
 void client (int port){
 	cout << "vilken ip?\n";
 	sf::IpAddress ip;
@@ -47,7 +54,7 @@ void client (int port){
 	else{
 		cout << "connected\n";
 	}
-
+	
 	char message[255];
 	size_t TaEmot;
 
@@ -55,10 +62,11 @@ void client (int port){
 		cout << "error recieving message";
 	}
 	else{
-		cout << message;
+		cout << message<<endl ;
 
 	}
-
+	cout <<"enter e to exit the program" <<endl;
+	cin.ignore(256,'e');
 }
 //---------------------------------------------------------------------
 
@@ -82,24 +90,5 @@ int main()
     	resultat = null;
     }
 
-/*
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
-*/
     return 0;
 }
