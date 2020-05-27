@@ -1,74 +1,102 @@
-#include <iostream>
-#include <SFML/System.hpp>
-#include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <string>
+#include <SFML/Network.hpp>
+#include <iostream>
+#include <thread>
+using namespace std;
+void server (int port){
+	
+	sf::TcpListener lyssnar;
 
-void Choose();
-void ClientTCP(unsigned short Port);
-void ServerTCP(unsigned short Port);
-std::size_t received;
-char storage[2000];
+	
+	if (lyssnar.listen(port) != sf::Socket::Done){
+		cout << "error listening\n";
+    	}
+	
+	sf::TcpSocket Koppling;
+	if (lyssnar.accept(Koppling) != sf::Socket::Done){
+		cout << "error connection\n";
+	}
 
-//__________________________________________________________________
+	cout << "function finished, connected?\n";
+
+	char message[255];
+	cout << "what message do you want to send?\n";
+	cin >> message;
+
+	if(Koppling.send(message,255) != sf::Socket::Done){
+
+		cout << "doesn't work\n";
+	}
+	else {
+		cout << "it worked";
+
+	}
+	cin >> port;
+}
+//-------------------------------------------------------------------
+void client (int port){
+	cout << "vilken ip?\n";
+	sf::IpAddress ip;
+	cin >> ip;
+
+	sf::TcpSocket socket;
+	sf::Socket::Status status = socket.connect(ip,port);
+	if (status != sf::Socket::Done){
+		cout << "error \n";
+	}
+	else{
+		cout << "connected\n";
+	}	
+	char message[255];
+	size_t TaEmot;
+	if(socket.receive(message, 255, TaEmot) != sf::Socket::Done){
+		cout << "connected but no message recieved\n";
+	}
+	else{
+		cout << message;
+
+	}
+}
+//---------------------------------------------------------------------
+
 int main()
-{
-  Choose();
-  std::cout << storage << std::endl;
+{ 
+    
+    int port;
+    port = 53000;
 
-  system("pause");
+    cout << "server (s)  eller klient (k)? \n";
+    char resultat;
+    char null; 
+    cin >> resultat;
 
-  return 0;
-   
+    if (resultat == 's'){
+	 server(port);
+	 resultat == null;
+    }
+    else if (resultat = 'k'){
+	client(port);		
+    	resultat = null;
+    }
+
+/*
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+        window.draw(shape);
+        window.display();
+    }
+*/
+    return 0;
 }
-//__________________________________________________________________
-void Choose(){
-  unsigned short Port = 53000;
-  char vem; 
-  std::cout << "Vill du vara server: 's' \nEller vill du vara en klient: 'k'"; 
-  std::cin >> vem;
- 
-  if (vem == 's'){ 
-    ServerTCP(Port); 
-  } 
-  else{
-    ClientTCP(Port); 
-  } 
-}
-//___________________________________________________________________
-void ClientTCP(unsigned short Port){
-  sf::IpAddress ServerAddress;
-  sf::TcpSocket socket;
-  std::string SendK = "Hejs svejs i cyberspace!";
-
-  std::cout << "Skriv addressen på servern du vill ansluta till:" << std::endl;
-  std::cin >> ServerAddress;
-
-  sf::Socket::Status status = socket.connect(ServerAddress, Port);
-  if (status != sf::Socket::Done){
-    std::cout << "error \n";
-  }
-  else{
-    std::cout << "connected\n";
-    socket.send(SendK.c_str(), SendK.length() + 1);
-    socket.receive(storage, sizeof(storage), received);
-  }
-}
-//___________________________________________________________________
-void ServerTCP(unsigned short Port){
-
-  std::string SendS = "You hacked it to the server!";
-  sf::TcpListener listener;
-
-  if (listener.listen(Port) != sf::Socket::Done){
-    std::cout << "error listening\n";
-  }
-  sf::TcpSocket Koppling;
-  if (listener.accept(Koppling) != sf::Socket::Done){
-    std::cout << "error connection\n";
-  }
-  Koppling.send(SendS.c_str(), SendS.length() + 1);
-  Koppling.receive(storage, sizeof(storage), received);
-}
-
