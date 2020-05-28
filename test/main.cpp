@@ -44,9 +44,8 @@ void server (int port){
 
 	}
 	
-	cout << "enter y to see the response \n";
-	
-	cin.ignore(1000000,'y');
+	cout << "Waiting for a responce\n";
+
 	if(Koppling.receive(message) != sf::Socket::Done){
 
 		cout << "there was a issue\n";
@@ -56,15 +55,18 @@ void server (int port){
 		cout <<"you got a responce\n"<< input<<endl;
 	}
 
+	
+	
 
 	cout << "enter e to exit the program\n";
 	cin.ignore(1000,'e');
 	Koppling.disconnect();
 }
+
 //-------------------------------------------------------------------
 
 void client (int port){
-	cout << "vilken ip?\n";
+	cout << "What ip adress?\n";
 	sf::IpAddress ip;
 	cin >> ip;
 
@@ -105,6 +107,7 @@ void client (int port){
 	cin.ignore(256,'e');
 	socket.disconnect();
 }
+
 //---------------------------------------------------------------------
 
 int main()
