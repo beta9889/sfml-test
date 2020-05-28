@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <string>
+#include <thread>
 
 using namespace std;
 
@@ -16,14 +17,16 @@ class Myclass{
   private:
 }Spelare[2];
 
-//sf::Packet packet;
-//sf::Packet& operator <<(sf::Packet& packet, const MyClass& myclass){
-//  return packet << myclass.HP << myclass.Mana << myclass.name << myclass.val;
-//}
-//sf::Packet& operator >>(sf::Packet& packet, MyClass& myclass){
-//  return packet >> myclass.HP >> myclass.Mana >> myclass.name << myclass.val;
-//}
-
+sf::Packet packet;
+sf::Packet& operator <<(sf::Packet& packet, const Myclass& myclass){
+  return packet << myclass.HP << myclass.Mana << myclass.name << myclass.val;
+}
+sf::Packet& operator >>(sf::Packet& packet, Myclass& myclass){
+  return packet >> myclass.HP >> myclass.Mana >> myclass.name << myclass.val;
+}
+sf::TcpListener lyssnar;
+sf::TcpSocket Koppling;
+int port = 53000;
 
 //--------------------------------------------------------
 void castspell(int x, int turn){
@@ -46,26 +49,46 @@ void castspell(int x, int turn){
 //-------------------------------------------------------
 void sendclient(int turn){
 //skicka till client 
-  cout << "låt client sköta runda härifrån\n"; 
-//  Spelare[turn].castspell(x, turn);
+  int x;
+  packet << Spelare[0];//ska vara 1 sen
+  
+  if(Koppling.receive(packet) != sf::Socket::Done){
+    cout << "connected but no message recieved\n";
+  }
+  else{
+    cout << "Jag fick tillbaka packet\n";
+  }
+
+  packet >> Spelare[0];//ska vara 1 sen
+  packet.clear();
+  x = Spelare[0].val;//ska vara 1 sen
+  castspell(x, turn);
 }
 //-------------------------------------------------------
-void sendendroundinfo(){
+void sendroundinfo(int turn){
 //skicka statsen efter rundan till clienten
-  cout << "SKicka härifrån stats and shit\n";
+  cout << "Skicka härifrån stats and shit\n";
+  packet << Spelare[0] << turn;
 
+  if(Koppling.send(packet) != sf::Socket::Done){
+    cout << "doesn't work\n";
+  }
+  else {
+    cout << "it worked";
+  }
+  packet.clear();
 
+//-------------------------------------------------------
   cout << Spelare[0].name << "'s HP: " << Spelare[0].HP << "Mana: " << Spelare[0].Mana << endl; 
   cout << Spelare[1].name << "'s HP: " << Spelare[1].HP << "Mana: " << Spelare[1].Mana << endl; 
 }
 //-------------------------------------------------------
 void serverturn(int turn){
   int x;
-  cout << "Vill du använda spell \n1:Curse of Madness\n2:Breath of Löfven\n";
+  cout << "Vill Servern använda spell \n1:Curse of Madness\n2:Breath of Löfven\n";
   cin >> x;
   castspell(x, turn);
   x = 0;
-  turn = turn + 1;
 }
 //--------------------------------------------------------
 int main(){
@@ -75,11 +98,23 @@ int main(){
   Spelare[1].Mana = 100;
   Spelare[0].name = "Server";
   Spelare[1].name = "Klient";
+  cout << "Welcome we are waiting for a connection\n";
+  if (lyssnar.listen(port) != sf::Socket::Done){
+    cout << "error listening\n";
+  }
+ 	
+  if (lyssnar.accept(Koppling) != sf::Socket::Done){
+    cout << "error connection\n";
+  }
+  else{
+    cout << "connected\n";
+  }
   int turn = 0;
   while (Spelare[0].HP > 0 && Spelare[1].HP > 0){
     if(turn == 2){
       turn = 0;
     }
+    sendroundinfo(turn);
     cout << "De är " << Spelare[turn].name << "'s tur\n";
     if (turn == 1){
       sendclient(turn);
@@ -87,7 +122,7 @@ int main(){
     else{
       serverturn(turn);
     }
-    sendendroundinfo();
+    turn = turn + 1;
   }
   if(Spelare[0].HP <= 0){
     cout << "clienten vann\n";
