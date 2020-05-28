@@ -7,25 +7,7 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-/*
-sf::Packet& intopacket(sf::Packet& packet, const battle& battle){
 
-	return packet << battle.playerHP << battle.opponentHP;
-}
-sf::Packet& outpacket(sf::Packet& packet, cont battle& battle){
-	return packet >> battle.playerHP >> battle.opponentHP;
-}
-*/
-struct battle{
-	public:
-	int opponentHP = 10;
-	int playerHP = 10;
-	void printshit(sf::Uint8 playerHP, sf::Uint8 opponentHP){
-		
-		cout <<"Player Hp = "<< playerHP << endl;
-		cout <<"Opponent HP = "<< opponentHP << endl;
-	}
-};
 
 void server (int port){
 	
@@ -51,7 +33,7 @@ void server (int port){
 
 		
 	int playerHP=10;
-	int opponentHP=10;	
+	int opponentHP=15;	
 	for (int i=0; i<10;i++){
 		cout << "what message do you want to send?\n";
 
@@ -59,29 +41,55 @@ void server (int port){
 		cout << playerHP << endl << opponentHP<<endl;	
 
 		if(message << input){
-			if(PHP << playerHP){
-				if(OHP<<opponentHP) {
-					cout << "message in packet\n";
-				}
-			}
+		cout << "message packaged\n";
 		}
 		else{
-			cout << "package could not recieve info \n";
+			cout << "message could not recieve info \n";
 		}
-
-
 		if(Koppling.send(message) != sf::Socket::Done){
-			if(Koppling.send(PHP) != sf::Socket::Done){
-				if(Koppling.send(OHP) != sf::Socket::Done){
-					cout << "error sending message\n";
-				}
-			}
+			cout << "error sending message";
 		}
 		else {
 			cout << "message sent\n";
-		
 		}
+
+
+
+		if(PHP << playerHP){
+			cout << "Your HP packaged\n"; 
+
+		}
+		else{
+			cout << "your HP could not be packaged\n";
+		}
+
+
+		if(Koppling.send(PHP) != sf::Socket::Done){
+			cout << "error sending your HP"; 
+		}
+		else{
+			cout << "Your HP was sent without problem";
+		}
+
+
+
+		if(OHP<<opponentHP) {
+			cout << "Opponent HP packaged\n";
+		}
+
+		else{
+			cout << "opponents HP could not be packaged\n";
+		}
+
 	
+		if(Koppling.send(OHP) != sf::Socket::Done){
+			cout << "error sending message\n";
+		}
+		else{
+			cout << "Opponent HP sent successfully";
+		}
+
+
 		cout << "Waiting for a responce\n";
 		message.clear();
 		PHP.clear();
@@ -130,27 +138,43 @@ void client (int port){
 	string output;
 	sf::Packet PHP;
 	sf::Packet OHP;
-
 	int playerHP=10;
 	int opponentHP=10;	
 
 	for (int i=0;i<10;i++){
 		if(socket.receive(message) != sf::Socket::Done){
-			if(socket.receive(PHP) != sf::Socket::Done){
-				if(socket.receive(OHP) != sf::Socket::Done){
-					cout << "error recieving packages";	
-				}
-			}
+			cout << "error recieving message\n";
 		}
+
 		else{
 			if(message >> output){
 				cout<<" här är medelandet  \"" << output <<"\" "<<endl;
-				if(PHP >> opponentHP || OHP >> playerHP){
-					cout << opponentHP << endl << playerHP << endl;
-				}
-				else{
-					cout << "didnt get stats";
-				}
+			}
+
+		}
+
+
+		if(socket.receive(PHP) != sf::Socket::Done){
+			cout << "error recieving Player HP\n";
+		}
+		else{
+			if(PHP >> opponentHP){
+				cout << opponentHP << endl;
+			}
+			else{
+				cout << "error reading Player health\n";
+			}
+		}
+
+		if(socket.receive(OHP) != sf::Socket::Done){
+			cout << "error recieving Opponent HP\n";	
+		}
+		else{
+			if( OHP >> playerHP){
+					cout << playerHP << endl;
+			}
+			else{
+				cout << "could not read opponent HP\n"; 
 			}
 
 		}
