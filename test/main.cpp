@@ -24,20 +24,42 @@ void server (int port){
 	cout << "function finished, connected?\n";
 
 	cout << "what message do you want to send?\n";
-	char message[256];
+
+	string input;
+	sf::Packet message;
+	getline(cin >> ws ,input);
 	
-	cin.getline(message,256);
+	cout << input << endl;
 
-	if(Koppling.send(message,256) != sf::Socket::Done){
+	message << input;
 
-		cout << "error sending message";
+	//cin.getline(message,sizeof(message));
+
+	if(Koppling.send(message) != sf::Socket::Done){
+
+		cout << "error sending message\n";
 	}
 	else {
 		cout << "it worked\n";
 
 	}
+	
+	cout << "enter y to see the response \n";
+	
+	cin.ignore(1000000,'y');
+	if(Koppling.receive(message) != sf::Socket::Done){
+
+		cout << "there was a issue\n";
+	}
+	else{
+		message >> input; 
+		cout <<"you got a responce\n"<< input<<endl;
+	}
+
+
 	cout << "enter e to exit the program\n";
 	cin.ignore(1000,'e');
+	Koppling.disconnect();
 }
 //-------------------------------------------------------------------
 
@@ -55,39 +77,55 @@ void client (int port){
 		cout << "connected\n";
 	}
 	
-	char message[255];
-	size_t TaEmot;
+	sf::Packet message;
+	string output;
 
-	if(socket.receive(message, 255, TaEmot) != sf::Socket::Done){
-		cout << "error recieving message";
+	if(socket.receive(message) != sf::Socket::Done){
+		cout << "error recieving message\n";
 	}
 	else{
-		cout << message<<endl ;
+		if(message >> output){
+			cout << output <<endl;
+		}
 
 	}
+	cout << "what do you want to respond with?\n";
+
+	getline(cin >>ws, output);
+	if(message << output){
+		socket.send(message);
+		cout << "message sent\n";
+	}
+	else{
+		cout << "there was a error\n";
+	}
+	
+
 	cout <<"enter e to exit the program" <<endl;
 	cin.ignore(256,'e');
+	socket.disconnect();
 }
 //---------------------------------------------------------------------
 
 int main()
 { 
     
-    int port;
-    port = 53000;
+	int port;
+	port = 53000;
 
-    cout << "server (s)  eller klient (k)? \n";
-    char resultat;
-    char null; 
-    cin >> resultat;
+	cout << "server (s)  eller klient (k)? \n";
+	char resultat;
+	char null; 
+	cin >> resultat;
 
-    if (resultat == 's'){
-	 server(port);
-	 resultat == null;
+	if (resultat == 's'){
+		server(port);
+		resultat == null;
     }
-    else if (resultat = 'k'){
-	client(port);		
-    	resultat = null;
+
+	else if (resultat = 'k'){
+		client(port);		
+		resultat = null;
     }
 
     return 0;
