@@ -33,26 +33,8 @@ void server (int port){
 
 		
 	int playerHP=10;
-	int opponentHP=15;	
+	int opponentHP=10;	
 	for (int i=0; i<10;i++){
-		cout << "what message do you want to send?\n";
-
-		getline(cin >> ws ,input);
-		cout << playerHP << endl << opponentHP<<endl;	
-
-		if(message << input){
-		cout << "message packaged\n";
-		}
-		else{
-			cout << "message could not recieve info \n";
-		}
-		if(Koppling.send(message) != sf::Socket::Done){
-			cout << "error sending message";
-		}
-		else {
-			cout << "message sent\n";
-		}
-
 
 
 		if(PHP << playerHP){
@@ -63,12 +45,11 @@ void server (int port){
 			cout << "your HP could not be packaged\n";
 		}
 
-
 		if(Koppling.send(PHP) != sf::Socket::Done){
-			cout << "error sending your HP"; 
+			cout << "error sending your HP\n"; 
 		}
 		else{
-			cout << "Your HP was sent without problem";
+			cout << "Your HP was sent without problem\n";
 		}
 
 
@@ -86,9 +67,27 @@ void server (int port){
 			cout << "error sending message\n";
 		}
 		else{
-			cout << "Opponent HP sent successfully";
+			cout << "Opponent HP sent successfully\n";
 		}
 
+
+		cout << "Do you want to attack\(1\) ,block\(2\) or grapple\(3\)?\n";
+
+		getline(cin >> ws ,input);
+		cout << playerHP << endl << opponentHP<<endl;	
+
+		if(message << input){
+		cout << "message packaged\n";
+		}
+		else{
+			cout << "message could not recieve info \n";
+		}
+		if(Koppling.send(message) != sf::Socket::Done){
+			cout << "error sending message\n";
+		}
+		else {
+			cout << "message sent\n";
+		}
 
 		cout << "Waiting for a responce\n";
 		message.clear();
@@ -128,7 +127,7 @@ void client (int port){
 	sf::TcpSocket socket;
 	sf::Socket::Status status = socket.connect(ip,port);
 	if (status != sf::Socket::Done){
-		cout << "error connecting";
+		cout << "error connecting\n";
 	}
 	else{
 		cout << "connected\n";
