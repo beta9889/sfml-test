@@ -58,11 +58,16 @@ void round(){
     Spelare[1].val = x;//ska vara 1 sen
     packet2 << Spelare[1];//ska vara 1 sen
 
-    if(socket.send(packet2) != sf::Socket::Done){
+    if(socket.send(packet) != sf::Socket::Done){
       cout << "error sending message";
     }
     else {
-      cout << "it worked\n";
+      if(socket.send(packet2) != sf::Socket::Done){
+        cout << "error sending message2";
+      }
+      else {
+        cout << "it worked\n2";
+      }
     }
   } 
   else {
@@ -78,7 +83,7 @@ int main(){
       cout << "error recieving packet\n";
     }
     else{
-      if(socket.receive(packet) != sf::Socket::Done){
+      if(socket.receive(packet2) != sf::Socket::Done){
         cout << "error recieving packet2\n";
       }
       else{

@@ -53,17 +53,23 @@ void sendclient(int turn){
 //skicka till client 
   int x;
   
-  if(Koppling.receive(packet2) != sf::Socket::Done){
+  if(Koppling.receive(packet) != sf::Socket::Done){
     cout << "connected but no message recieved\n";
   }
   else{
-    cout << "Jag fick tillbaka packet\n";
-  }
+    if(Koppling.receive(packet2) != sf::Socket::Done){
+      cout << "connected but no message recieved\n";
+    }
+    else{  
+      cout << "Jag fick tillbaka packet\n";
+      packet2 >> Spelare[1];
+      x = Spelare[1].val;
 
-  packet2 >> Spelare[1];//ska vara 1 sen
-  packet2.clear();
-  x = Spelare[1].val;//ska vara 1 sen
-  castspell(x, turn);
+      castspell(x, turn);
+      packet.clear();
+      packet2.clear();
+    }
+  }
 }
 //-------------------------------------------------------
 void sendroundinfo(int turn){
@@ -96,7 +102,6 @@ void serverturn(int turn){
   cout << "Vill Servern använda spell \n1:Curse of Madness\n2:Breath of Löfven\n";
   cin >> x;
   castspell(x, turn);
-  x = 0;
 }
 //--------------------------------------------------------
 int main(){
