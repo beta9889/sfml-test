@@ -29,10 +29,17 @@ void server (int port){
 	sf::Packet message;
 	getline(cin >> ws ,input);
 	
-	cout << input << endl;
+	//cout << input << endl;
 
-	message << input;
+	if(message << input){
+		
+		cout << "message in packet\n";
+	}
+	else{
+		cout << "package could not recieve info \n";
+	}
 
+	
 	//cin.getline(message,sizeof(message));
 
 	if(Koppling.send(message) != sf::Socket::Done){
@@ -41,21 +48,24 @@ void server (int port){
 	}
 	else {
 		cout << "it worked\n";
-
+		
 	}
 	
 	cout << "Waiting for a responce\n";
+	message.clear();
 
 	if(Koppling.receive(message) != sf::Socket::Done){
 
 		cout << "there was a issue\n";
 	}
 	else{
-		message >> input; 
-		cout <<"you got a responce\n"<< input<<endl;
-	}
-
+		if(message >> input){ 
+			message.clear();	
 	
+			cout <<"you got a responce\n"<< input<<endl;
+		}
+	}
+			
 	
 
 	cout << "enter e to exit the program\n";
@@ -82,16 +92,18 @@ void client (int port){
 	sf::Packet message;
 	string output;
 
-
-	if(socket.receive(message,sizeof(message),recieved) != sf::Socket::Done){
+	if(socket.receive(message) != sf::Socket::Done){
 		cout << "error recieving message\n";
 	}
 	else{
 		if(message >> output){
-			cout << output <<endl;
+			cout<<" här är medelandet  \"" << output <<"\" "<<endl;
 		}
 
 	}
+	
+	message.clear();
+
 	cout << "what do you want to respond with?\n";
 	string input;
 	getline(cin >>ws, input);
@@ -106,7 +118,7 @@ void client (int port){
 	
 
 	cout <<"enter e to exit the program" <<endl;
-	cin.ignore(256,'e');
+	cin.ignore(1000,'e');
 	socket.disconnect();
 }
 
@@ -124,13 +136,13 @@ int main()
 	cin >> resultat;
 
 	if (resultat == 's'){
-		server(port);
 		resultat == null;
+		server(port);
     }
 
 	else if (resultat = 'k'){
-		client(port);		
 		resultat = null;
+		client(port);		
     }
 
     return 0;
