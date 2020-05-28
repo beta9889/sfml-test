@@ -7,7 +7,13 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
+sf::Packet& intopacket(sf::Packet& packet, cont battle& battle){
 
+	return packet << battle.playerHP << battle.opponentHP;
+}
+sf::Packet& outpacket(sf::Packet& packet, cont battle& battle){
+	return packet >> battle.playerHP >> battle.opponentHP
+}
 struct battle{
 
 	sf::Uint8 opponentHP = 10;
@@ -45,7 +51,7 @@ void server (int port){
 		
 
 		if(message << input){
-			if(message << battle.playerHP << battle.opponentHP) 
+			if(message << battle) 
 				cout << "message in packet\n";
 		}
 		else{
@@ -112,10 +118,14 @@ void client (int port){
 			cout << "error recieving message\n";
 		}
 		else{
-			if(message >> output >> Cbattle.opponentHP >> Cbattle.playerHP ){
+
+
+			if(message >> output){
 				cout<<" här är medelandet  \"" << output <<"\" "<<endl;
-				cout << "player HP = "<< Cbattle.playerHP << endl;
-				cout << "opponent HP = " <<Cbattle.opponentHP << endl;
+				if(message>>Cbattle){
+					cout << "player HP = "<< Cbattle.playerHP << endl;
+					cout << "opponent HP = " <<Cbattle.opponentHP << endl;
+				}
 			}
 
 		}
