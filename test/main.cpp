@@ -97,7 +97,7 @@ void client (int port){
 	}
 	else{
 		if(message >> output){
-			cout<<" här är medelandet  \"" << output <<"\" "<<endl;
+			cout<<" här är medelandet: " << output <<endl;
 		}
 
 	}
