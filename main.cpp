@@ -5,9 +5,17 @@
 #include <cstring>
 using namespace std;
 
+
+class character
+{
+	public:
+	int hp = 100;
+
+};
+
 //---------------------------------------------------------------------------
 
-void server (int port){
+void server (int port, character &server1){
 	
 	sf::TcpListener lyssnar;
 
@@ -77,7 +85,9 @@ void client (int port){
 //---------------------------------------------------------------------
 
 int main()
-{ 
+{
+character server1;
+character client1; 
     
 	int port;
 	port = 53000;
@@ -88,7 +98,7 @@ int main()
 	cin >> resultat;
 
 	if (resultat == 's'){
-		server(port);
+		server(port, server1);
 		resultat == null;
     }
 
