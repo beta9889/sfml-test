@@ -49,18 +49,18 @@ void server (int port){
 	sf::Packet PHP;
 	sf::Packet OHP;
 
-	battle battle;	
-	battle.playerHP=10;
-	battle.opponentHP=10;	
+		
+	int playerHP=10;
+	int opponentHP=10;	
 	for (int i=0; i<10;i++){
 		cout << "what message do you want to send?\n";
 
 		getline(cin >> ws ,input);
-		battle.printshit(battle.playerHP,battle.opponentHP);	
+		cout << playerHP << endl << opponentHP<<endl;	
 
 		if(message << input){
-			if(PHP << battle.playerHP){
-				if(OHP<<battle.opponentHP) {
+			if(PHP << playerHP){
+				if(OHP<<opponentHP) {
 					cout << "message in packet\n";
 				}
 			}
@@ -84,6 +84,8 @@ void server (int port){
 	
 		cout << "Waiting for a responce\n";
 		message.clear();
+		PHP.clear();
+		OHP.clear();
 
 		if(Koppling.receive(message) != sf::Socket::Done){
 
@@ -97,10 +99,10 @@ void server (int port){
 			}
 		}
 			
-		battle.playerHP =battle.playerHP - 2;
-		battle.opponentHP = battle.opponentHP - 5;
-		if (battle.playerHP <= 0) break;
-		else if (battle.opponentHP <= 0) break;
+		playerHP =playerHP - 2;
+		opponentHP = opponentHP - 5;
+		if (playerHP <= 0) break;
+		else if (opponentHP <= 0) break;
 	}
 
 	cout << "enter e to exit the program\n";
@@ -126,35 +128,36 @@ void client (int port){
 	
 	sf::Packet message;
 	string output;
-	battle Cbattle;
 	sf::Packet PHP;
 	sf::Packet OHP;
 
-	Cbattle.playerHP=10;
-	Cbattle.opponentHP=10;	
+	int playerHP=10;
+	int opponentHP=10;	
 
 	for (int i=0;i<10;i++){
 		if(socket.receive(message) != sf::Socket::Done){
-			
 			if(socket.receive(PHP) != sf::Socket::Done){
 				if(socket.receive(OHP) != sf::Socket::Done){
-					cout << "error recieving message\n";
+					cout << "error recieving packages";	
 				}
 			}
 		}
 		else{
 			if(message >> output){
 				cout<<" här är medelandet  \"" << output <<"\" "<<endl;
-				if(PHP >> Cbattle.opponentHP){
-					if(OHP >> Cbattle.playerHP){
-						cout << Cbattle.opponentHP << endl << Cbattle.playerHP << endl;
-					}
+				if(PHP >> opponentHP || OHP >> playerHP){
+					cout << opponentHP << endl << playerHP << endl;
+				}
+				else{
+					cout << "didnt get stats";
 				}
 			}
 
 		}
 	
 		message.clear();
+		PHP.clear();
+		OHP.clear();
 
 		cout << "what do you want to respond with?\n";
 		string input;
@@ -168,9 +171,9 @@ void client (int port){
 			cout << "there was a error\n";
 		}
 	
-		if (Cbattle.playerHP <= 0) break;
-		else if (Cbattle.opponentHP <= 0) break;
-		else {Cbattle.playerHP = 0; Cbattle.opponentHP=0;}
+		if (playerHP <= 0) break;
+		else if (opponentHP <= 0) break;
+		else {playerHP = 0; opponentHP = 0;}
 	}
 	cout <<"enter e to exit the program" <<endl;
 	cin.ignore(1000,'e');
