@@ -18,6 +18,11 @@ struct battle{
 
 	sf::Uint8 opponentHP = 10;
 	sf::Uint8 playerHP = 10;
+	void printshit(playerHP, opponentHP){
+		
+		cout <<"Player Hp = "<< battle.playerHP << endl;
+		cout <<"Opponent HP = "<< battle.opponentHP << endl;
+	}
 };
 
 void server (int port){
@@ -45,10 +50,7 @@ void server (int port){
 		cout << "what message do you want to send?\n";
 
 		getline(cin >> ws ,input);
-		
-		cout <<"Player Hp = "<< battle.playerHP << endl;
-		cout <<"Opponent HP = "<< battle.opponentHP << endl;
-		
+		battle.print(playerHP,opponentHP);	
 
 		if(message << input){
 			if(message << battle) 
@@ -123,8 +125,8 @@ void client (int port){
 			if(message >> output){
 				cout<<" här är medelandet  \"" << output <<"\" "<<endl;
 				if(message>>Cbattle){
-					cout << "player HP = "<< Cbattle.playerHP << endl;
-					cout << "opponent HP = " <<Cbattle.opponentHP << endl;
+
+					Cbattle.print(playerHP,opponentHP);	
 				}
 			}
 

@@ -24,26 +24,38 @@ void server (int port){
 	cout << "function finished, connected?\n";
 
 	cout << "what message do you want to send?\n";
-	char message[10];
-	for (int i; i<=10; i++){
+	sf::Packet message;
+	string input;
+	string output;
+	for(int i; i<=10; i++){
 		
-		cin >> message[i];
-	}
+		getline(cin >> ws, input);;
 
-	//cin.getline(message,sizeof(message));
+		if(Koppling.send(message) != sf::Socket::Done){
 
-	if(Koppling.send(message,sizeof(message)) != sf::Socket::Done){
+			cout << "error sending message";
+		}
+		else {
+			cout << "it worked\n";
 
-		cout << "error sending message";
-	}
-	else {
-		cout << "it worked\n";
+		}
+	
+		message.clear();
+		if(Koppling.receive(message)){
+			message >> output;
+			cout << output << endl;
+			
+		}
+		else{
+			cout << "error try again \n";
+		}
 
 	}
 	cout << "enter e to exit the program\n";
 	cin.ignore(1000,'e');
 	Koppling.disconnect();
 }
+
 //-------------------------------------------------------------------
 
 void client (int port){
@@ -60,14 +72,30 @@ void client (int port){
 		cout << "connected\n";
 	}
 	
-	char* message;
-	size_t TaEmot;
+	sf::Packet message;
+	string output;
+	string input;
+	for (int i; i<10;i++){
+		if(socket.receive(message) != sf::Socket::Done){
+			cout << "error recieving message\n";
+		}
+		else{
+			message >> output;
+			cout << "message is = "<< output <<endl;
 
-	if(socket.receive(message, 1000, TaEmot) != sf::Socket::Done){
-		cout << "error recieving message\n";
-	}
-	else{
-		cout << message<<endl ;
+		}
+			
+		
+		getline(cin >> ws,input );;
+		message.clear();
+		if(socket.send(message) != sf::Socket::Done){
+
+			cout << "error sending message";
+		}
+		else {
+			cout << "it worked\n";
+
+		}
 
 	}
 	cout <<"enter e to exit the program" <<endl;
