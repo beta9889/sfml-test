@@ -2,7 +2,7 @@
 
 all : exe
 
-main.o: main.cpp
-	g++ -c main.cpp -ISFML/include -o main.o
-exe: main.o
-	g++ main.o -LSFML/lib -lsfml-window -lsfml-graphics -lsfml-system -lsfml-network -o exe
+server.o: server.cpp
+	g++ -c server.cpp -ISFML/include -o server.o
+exe: server.o
+	g++ server.o -LSFML/lib -lsfml-window -lsfml-graphics -lsfml-system -lsfml-network -o exe
