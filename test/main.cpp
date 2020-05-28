@@ -24,30 +24,59 @@ void server (int port){
 	cout << "function finished, connected?\n";
 
 	cout << "what message do you want to send?\n";
-	char message[10];
-	for (int i; i<=10; i++){
+
+	string input;
+	sf::Packet message;
+	getline(cin >> ws ,input);
+	
+	//cout << input << endl;
+
+	if(message << input){
 		
-		cin >> message[i];
+		cout << "message in packet\n";
+	}
+	else{
+		cout << "package could not recieve info \n";
 	}
 
+	
 	//cin.getline(message,sizeof(message));
 
-	if(Koppling.send(message,sizeof(message)) != sf::Socket::Done){
+	if(Koppling.send(message) != sf::Socket::Done){
 
-		cout << "error sending message";
+		cout << "error sending message\n";
 	}
 	else {
 		cout << "it worked\n";
-
+		
 	}
+	
+	cout << "Waiting for a responce\n";
+	message.clear();
+
+	if(Koppling.receive(message) != sf::Socket::Done){
+
+		cout << "there was a issue\n";
+	}
+	else{
+		if(message >> input){ 
+			message.clear();	
+	
+			cout <<"you got a responce\n"<< input<<endl;
+		}
+	}
+			
+	
+
 	cout << "enter e to exit the program\n";
 	cin.ignore(1000,'e');
 	Koppling.disconnect();
 }
+
 //-------------------------------------------------------------------
 
 void client (int port){
-	cout << "vilken ip?\n";
+	cout << "What ip adress?\n";
 	sf::IpAddress ip;
 	cin >> ip;
 
@@ -60,20 +89,39 @@ void client (int port){
 		cout << "connected\n";
 	}
 	
-	char* message;
-	size_t TaEmot;
+	sf::Packet message;
+	string output;
 
-	if(socket.receive(message, 1000, TaEmot) != sf::Socket::Done){
+	if(socket.receive(message) != sf::Socket::Done){
 		cout << "error recieving message\n";
 	}
 	else{
-		cout << message<<endl ;
+		if(message >> output){
+			cout<<" här är medelandet  \"" << output <<"\" "<<endl;
+		}
 
 	}
+	
+	message.clear();
+
+	cout << "what do you want to respond with?\n";
+	string input;
+	getline(cin >>ws, input);
+
+	if(message << input){
+		socket.send(message);
+		cout << "message sent\n";
+	}
+	else{
+		cout << "there was a error\n";
+	}
+	
+
 	cout <<"enter e to exit the program" <<endl;
-	cin.ignore(256,'e');
+	cin.ignore(1000,'e');
 	socket.disconnect();
 }
+
 //---------------------------------------------------------------------
 
 int main()
@@ -88,13 +136,13 @@ int main()
 	cin >> resultat;
 
 	if (resultat == 's'){
-		server(port);
 		resultat == null;
+		server(port);
     }
 
 	else if (resultat = 'k'){
-		client(port);		
 		resultat = null;
+		client(port);		
     }
 
     return 0;
