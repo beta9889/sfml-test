@@ -30,7 +30,7 @@ void server (int port){
 	sf::Packet message;
 	sf::Packet PHP;
 	sf::Packet OHP;
-
+	string output;
 		
 	int playerHP=10;
 	int opponentHP=10;	
@@ -105,7 +105,7 @@ void server (int port){
 				cout <<"you got a responce\n"<< input<<endl;
 			}
 		}
-			
+		if (	
 		playerHP =playerHP - 2;
 		opponentHP = opponentHP - 5;
 		if (playerHP <= 0) break;
