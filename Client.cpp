@@ -57,10 +57,9 @@ void round(){
     int x;
     cout << "Vill Klienten casta spell: \n1:Curse of Madness\n2:Breath of Frost\n";
     cin >> x;
-    Spelare[1].val = x;//ska vara 1 sen
-    cout << "x: " << Spelare[1].val << endl;
+    Spelare[1].val = x;
     packet << Spelare[0];
-    packet2 << Spelare[1];//ska vara 1 sen
+    packet2 << Spelare[1];
 
     if(socket.send(packet) != sf::Socket::Done){
       cout << "error sending message";
@@ -70,7 +69,7 @@ void round(){
         cout << "error sending message2";
       }
       else {
-        cout << "it worked2\n";
+//        cout << "it worked2\n";
       }
     }
   } 
