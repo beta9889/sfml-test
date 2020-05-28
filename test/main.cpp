@@ -82,7 +82,8 @@ void client (int port){
 	sf::Packet message;
 	string output;
 
-	if(socket.receive(message) != sf::Socket::Done){
+
+	if(socket.receive(message,sizeof(message),recieved) != sf::Socket::Done){
 		cout << "error recieving message\n";
 	}
 	else{
@@ -92,9 +93,10 @@ void client (int port){
 
 	}
 	cout << "what do you want to respond with?\n";
+	string input;
+	getline(cin >>ws, input);
 
-	getline(cin >>ws, output);
-	if(message << output){
+	if(message << input){
 		socket.send(message);
 		cout << "message sent\n";
 	}
