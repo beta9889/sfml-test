@@ -11,6 +11,7 @@ class character
 	public:
 	int hp = 100;
 	void kick(character &server1);
+	void hello();
 
 };
 
@@ -46,13 +47,14 @@ character func_call;
 	for (int i; i<=10; i++){
 		
 		cin >> message[i];
+
+
 		cout << "Kick your opponent?" << endl;
 		//char yn;
 		//cin >> yn;
 		//if(yn == "y"){
 		func_call.kick(server1);
 	}
-
 	//cin.getline(message,sizeof(message));
 
 	if(Koppling.send(message,sizeof(message)) != sf::Socket::Done){
@@ -69,7 +71,7 @@ character func_call;
 }
 //-------------------------------------------------------------------
 
-void client (int port, character &server1){
+void client (int port, character &client1){
 	cout << "vilken ip?\n";
 	sf::IpAddress ip;
 	cin >> ip;
@@ -91,12 +93,13 @@ void client (int port, character &server1){
 	}
 	else{
 		cout << message<<endl ;
+		cout << client1.hp << endl;
 	
 
 	}
 	cout <<"enter e to exit the program" <<endl;
 	cin.ignore(256,'e');
-	socket.disconnect();
+	//socket.disconnect();
 }
 //---------------------------------------------------------------------
 
@@ -106,7 +109,7 @@ character server1;
 character client1; 
     
 	int port;
-	port = 53000;
+	port = 52000;
 
 	cout << "server (s)  eller klient (k)? \n";
 	char resultat;
@@ -119,7 +122,7 @@ character client1;
     }
 
 	else if (resultat = 'k'){
-		client(port, server1);		
+		client(port, client1);		
 		resultat = null;
     }
 
