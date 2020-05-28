@@ -44,14 +44,24 @@ void client (){
   }
 }
 //----------------------------------------------------------
-void round(){				
+void round(int loop){				
   packet >> Spelare[0];
   packet2 >> Spelare[1];
   packet.clear();
   packet2.clear();
+
+  if(Spelare[0].HP <= 0){
+    cout << "clienten vann\n";
+    return ;
+  }
+  if(Spelare[1].HP <= 0){
+    cout << "Servern vann\n";
+    return ;
+  }
+
   cout << Spelare[0].name << "'s HP: " << Spelare[0].HP << " Mana: " << Spelare[0].Mana << endl; 
   cout << Spelare[1].name << "'s HP: " << Spelare[1].HP << " Mana: " << Spelare[1].Mana << endl; 
-  
+ 
 
   if(Spelare[0].sendturn == 1){
     int x;
@@ -64,13 +74,8 @@ void round(){
     if(socket.send(packet) != sf::Socket::Done){
       cout << "error sending message";
     }
-    else {
-      if(socket.send(packet2) != sf::Socket::Done){
-        cout << "error sending message2";
-      }
-      else {
-//        cout << "it worked2\n";
-      }
+    if(socket.send(packet2) != sf::Socket::Done){
+      cout << "error sending message2";
     }
   } 
   else {
@@ -83,14 +88,14 @@ int main(){
   client();
   while(loop == 0){ 
     if(socket.receive(packet) != sf::Socket::Done){
-      cout << "error recieving packet\n";
+      socket.disconnect();
     }
     else{
       if(socket.receive(packet2) != sf::Socket::Done){
-        cout << "error recieving packet2\n";
+        socket.disconnect();
       }
       else{
-        round();
+        round(loop);
         packet.clear();
         packet2.clear();
       }

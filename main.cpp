@@ -55,14 +55,12 @@ void sendclient(int turn){
     cout << "connected but no message recieved\n";
   }
   else{
-    cout << "Jag fick tillbaka packet1\n";
     packet >> Spelare[0];
   }
   if(Koppling.receive(packet2) != sf::Socket::Done){
     cout << "connected but no message recieved\n";
   }
   else{  
-    cout << "Jag fick tillbaka packet2\n";
     packet2 >> Spelare[1];
     cout << Spelare[1].val << endl;
     castspell(Spelare[1].val, turn);
@@ -79,19 +77,13 @@ void sendroundinfo(int turn){
   if(Koppling.send(packet) != sf::Socket::Done){
     cout << "doesn't work\n";
   }
-  else {
-    cout << "it worked\n";
-  }
   if(Koppling.send(packet2) != sf::Socket::Done){
     cout << "doesn't work2\n";
   }
-  else {
-    cout << "it worked2\n";
-  }
+
   packet.clear();
   packet2.clear();
 
-//-------------------------------------------------------
   cout << Spelare[0].name << "'s HP: " << Spelare[0].HP << "Mana: " << Spelare[0].Mana << endl; 
   cout << Spelare[1].name << "'s HP: " << Spelare[1].HP << "Mana: " << Spelare[1].Mana << endl; 
 }
@@ -138,9 +130,13 @@ int main(){
     turn = turn + 1;
   }
   if(Spelare[0].HP <= 0){
+    sendroundinfo(turn);
     cout << "clienten vann\n";
   }
   if(Spelare[1].HP <= 0){
+    sendroundinfo(turn);
     cout << "Servern vann\n";
   }
+  cout << "Click on ('e') to exit\n";
+  cin.ignore(255, 'e');
 }
