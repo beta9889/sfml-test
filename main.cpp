@@ -13,20 +13,22 @@ class Myclass{
     int HP;
     int Mana;
     string name;
-    int val;	
+    int val;
+    int sendturn;	
   private:
 }Spelare[2];
 
 sf::Packet packet;
+sf::Packet packet2;
 sf::Packet& operator <<(sf::Packet& packet, const Myclass& myclass){
-  return packet << myclass.HP << myclass.Mana << myclass.name << myclass.val;
+  return packet << myclass.HP << myclass.Mana << myclass.name << myclass.val << myclass.sendturn;
 }
 sf::Packet& operator >>(sf::Packet& packet, Myclass& myclass){
-  return packet >> myclass.HP >> myclass.Mana >> myclass.name << myclass.val;
+  return packet >> myclass.HP >> myclass.Mana >> myclass.name >> myclass.val >> myclass.sendturn;
 }
 sf::TcpListener lyssnar;
 sf::TcpSocket Koppling;
-int port = 53000;
+int port = 50000;
 
 //--------------------------------------------------------
 void castspell(int x, int turn){
@@ -50,33 +52,39 @@ void castspell(int x, int turn){
 void sendclient(int turn){
 //skicka till client 
   int x;
-  packet << Spelare[0];//ska vara 1 sen
   
-  if(Koppling.receive(packet) != sf::Socket::Done){
+  if(Koppling.receive(packet2) != sf::Socket::Done){
     cout << "connected but no message recieved\n";
   }
   else{
     cout << "Jag fick tillbaka packet\n";
   }
 
-  packet >> Spelare[0];//ska vara 1 sen
-  packet.clear();
-  x = Spelare[0].val;//ska vara 1 sen
+  packet2 >> Spelare[1];//ska vara 1 sen
+  packet2.clear();
+  x = Spelare[1].val;//ska vara 1 sen
   castspell(x, turn);
 }
 //-------------------------------------------------------
 void sendroundinfo(int turn){
-//skicka statsen efter rundan till clienten
-  cout << "Skicka härifrån stats and shit\n";
-  packet << Spelare[0] << turn;
+  Spelare[0].sendturn = turn;
+  packet << Spelare[0];
+  packet2 << Spelare[1];
 
   if(Koppling.send(packet) != sf::Socket::Done){
     cout << "doesn't work\n";
   }
   else {
-    cout << "it worked";
+    cout << "it worked\n";
+  }
+  if(Koppling.send(packet2) != sf::Socket::Done){
+    cout << "doesn't work2\n";
+  }
+  else {
+    cout << "it worked2\n";
   }
   packet.clear();
+  packet2.clear();
 
 //-------------------------------------------------------
   cout << Spelare[0].name << "'s HP: " << Spelare[0].HP << "Mana: " << Spelare[0].Mana << endl; 
@@ -96,8 +104,8 @@ int main(){
   Spelare[0].Mana = 100;
   Spelare[1].HP = 100;
   Spelare[1].Mana = 100;
-  Spelare[0].name = "Server";
-  Spelare[1].name = "Klient";
+  Spelare[0].name = "Servern";
+  Spelare[1].name = "Klienten";
   cout << "Welcome we are waiting for a connection\n";
   if (lyssnar.listen(port) != sf::Socket::Done){
     cout << "error listening\n";
