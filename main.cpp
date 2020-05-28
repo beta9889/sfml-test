@@ -10,12 +10,22 @@ class character
 {
 	public:
 	int hp = 100;
+	void kick(character &server1);
 
 };
 
 //---------------------------------------------------------------------------
 
+void character::kick(character &server1)
+{
+	server1.hp = server1.hp - 50;
+	cout << server1.hp << endl;
+	
+
+}
+
 void server (int port, character &server1){
+character func_call;
 	
 	sf::TcpListener lyssnar;
 
@@ -36,6 +46,11 @@ void server (int port, character &server1){
 	for (int i; i<=10; i++){
 		
 		cin >> message[i];
+		cout << "Kick your opponent?" << endl;
+		//char yn;
+		//cin >> yn;
+		//if(yn == "y"){
+		func_call.kick(server1);
 	}
 
 	//cin.getline(message,sizeof(message));
@@ -54,7 +69,7 @@ void server (int port, character &server1){
 }
 //-------------------------------------------------------------------
 
-void client (int port){
+void client (int port, character &server1){
 	cout << "vilken ip?\n";
 	sf::IpAddress ip;
 	cin >> ip;
@@ -76,6 +91,7 @@ void client (int port){
 	}
 	else{
 		cout << message<<endl ;
+	
 
 	}
 	cout <<"enter e to exit the program" <<endl;
@@ -103,7 +119,7 @@ character client1;
     }
 
 	else if (resultat = 'k'){
-		client(port);		
+		client(port, server1);		
 		resultat = null;
     }
 
