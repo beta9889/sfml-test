@@ -27,7 +27,7 @@ void server (int port){
 	sf::Packet message;
 	string input;
 	string output;
-	for(int i; i<=10; i++){
+	for(int i=0; i<=3; i++){
 		
 		getline(cin >> ws, input);;
 
@@ -41,13 +41,13 @@ void server (int port){
 		}
 	
 		message.clear();
-		if(Koppling.receive(message)){
-			message >> output;
-			cout << output << endl;
+		if(Koppling.receive(message) != sf::Socket::Done){
 			
+			cout << "error try again \n";
 		}
 		else{
-			cout << "error try again \n";
+			message >> output;
+			cout << output << endl;
 		}
 
 	}
@@ -75,7 +75,8 @@ void client (int port){
 	sf::Packet message;
 	string output;
 	string input;
-	for (int i; i<10;i++){
+	for (int i=0; i<3;i++){
+
 		if(socket.receive(message) != sf::Socket::Done){
 			cout << "error recieving message\n";
 		}
@@ -85,10 +86,12 @@ void client (int port){
 
 		}
 			
-		
-		getline(cin >> ws,input );;
 		message.clear();
+		
+		getline(cin >> ws,input);
+		message << input;
 		if(socket.send(message) != sf::Socket::Done){
+
 
 			cout << "error sending message";
 		}
