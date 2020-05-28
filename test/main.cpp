@@ -7,21 +7,23 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-sf::Packet& intopacket(sf::Packet& packet, cont battle& battle){
+/*
+sf::Packet& intopacket(sf::Packet& packet, const battle& battle){
 
 	return packet << battle.playerHP << battle.opponentHP;
 }
 sf::Packet& outpacket(sf::Packet& packet, cont battle& battle){
-	return packet >> battle.playerHP >> battle.opponentHP
+	return packet >> battle.playerHP >> battle.opponentHP;
 }
+*/
 struct battle{
-
-	sf::Uint8 opponentHP = 10;
-	sf::Uint8 playerHP = 10;
-	void printshit(playerHP, opponentHP){
+	public:
+	int opponentHP = 10;
+	int playerHP = 10;
+	void printshit(sf::Uint8 playerHP, sf::Uint8 opponentHP){
 		
-		cout <<"Player Hp = "<< battle.playerHP << endl;
-		cout <<"Opponent HP = "<< battle.opponentHP << endl;
+		cout <<"Player Hp = "<< playerHP << endl;
+		cout <<"Opponent HP = "<< opponentHP << endl;
 	}
 };
 
@@ -44,17 +46,24 @@ void server (int port){
 
 	string input;
 	sf::Packet message;
+	sf::Packet PHP;
+	sf::Packet OHP;
+
 	battle battle;	
-	
+	battle.playerHP=10;
+	battle.opponentHP=10;	
 	for (int i=0; i<10;i++){
 		cout << "what message do you want to send?\n";
 
 		getline(cin >> ws ,input);
-		battle.print(playerHP,opponentHP);	
+		battle.printshit(battle.playerHP,battle.opponentHP);	
 
 		if(message << input){
-			if(message << battle) 
-				cout << "message in packet\n";
+			if(PHP << battle.playerHP){
+				if(OHP<<battle.opponentHP) {
+					cout << "message in packet\n";
+				}
+			}
 		}
 		else{
 			cout << "package could not recieve info \n";
@@ -62,8 +71,11 @@ void server (int port){
 
 
 		if(Koppling.send(message) != sf::Socket::Done){
-
-			cout << "error sending message\n";
+			if(Koppling.send(PHP) != sf::Socket::Done){
+				if(Koppling.send(OHP) != sf::Socket::Done){
+					cout << "error sending message\n";
+				}
+			}
 		}
 		else {
 			cout << "message sent\n";
@@ -86,7 +98,7 @@ void server (int port){
 		}
 			
 		battle.playerHP =battle.playerHP - 2;
-		battle.opponentHP = battle.opponentHP - 2;
+		battle.opponentHP = battle.opponentHP - 5;
 		if (battle.playerHP <= 0) break;
 		else if (battle.opponentHP <= 0) break;
 	}
@@ -115,18 +127,28 @@ void client (int port){
 	sf::Packet message;
 	string output;
 	battle Cbattle;
+	sf::Packet PHP;
+	sf::Packet OHP;
+
+	Cbattle.playerHP=10;
+	Cbattle.opponentHP=10;	
+
 	for (int i=0;i<10;i++){
 		if(socket.receive(message) != sf::Socket::Done){
-			cout << "error recieving message\n";
+			
+			if(socket.receive(PHP) != sf::Socket::Done){
+				if(socket.receive(OHP) != sf::Socket::Done){
+					cout << "error recieving message\n";
+				}
+			}
 		}
 		else{
-
-
 			if(message >> output){
 				cout<<" här är medelandet  \"" << output <<"\" "<<endl;
-				if(message>>Cbattle){
-
-					Cbattle.print(playerHP,opponentHP);	
+				if(PHP >> Cbattle.opponentHP){
+					if(OHP >> Cbattle.playerHP){
+						cout << Cbattle.opponentHP << endl << Cbattle.playerHP << endl;
+					}
 				}
 			}
 
@@ -148,6 +170,7 @@ void client (int port){
 	
 		if (Cbattle.playerHP <= 0) break;
 		else if (Cbattle.opponentHP <= 0) break;
+		else {Cbattle.playerHP = 0; Cbattle.opponentHP=0;}
 	}
 	cout <<"enter e to exit the program" <<endl;
 	cin.ignore(1000,'e');
@@ -160,7 +183,7 @@ int main()
 { 
     
 	int port;
-	port = 53000;
+	port = 52000;
 
 	cout << "server (s)  eller klient (k)? \n";
 	char resultat;
