@@ -50,26 +50,25 @@ void castspell(int x, int turn){
 }
 //-------------------------------------------------------
 void sendclient(int turn){
-//skicka till client 
-  int x;
   
   if(Koppling.receive(packet) != sf::Socket::Done){
     cout << "connected but no message recieved\n";
   }
   else{
-    if(Koppling.receive(packet2) != sf::Socket::Done){
-      cout << "connected but no message recieved\n";
-    }
-    else{  
-      cout << "Jag fick tillbaka packet\n";
-      packet2 >> Spelare[1];
-      x = Spelare[1].val;
-
-      castspell(x, turn);
-      packet.clear();
-      packet2.clear();
-    }
+    cout << "Jag fick tillbaka packet1\n";
+    packet >> Spelare[0];
   }
+  if(Koppling.receive(packet2) != sf::Socket::Done){
+    cout << "connected but no message recieved\n";
+  }
+  else{  
+    cout << "Jag fick tillbaka packet2\n";
+    packet2 >> Spelare[1];
+    cout << Spelare[1].val << endl;
+    castspell(Spelare[1].val, turn);
+  }
+  packet2.clear();
+  packet.clear();
 }
 //-------------------------------------------------------
 void sendroundinfo(int turn){
@@ -99,7 +98,7 @@ void sendroundinfo(int turn){
 //-------------------------------------------------------
 void serverturn(int turn){
   int x;
-  cout << "Vill Servern använda spell \n1:Curse of Madness\n2:Breath of Löfven\n";
+  cout << "Vill Servern casta spell: \n1:Curse of Madness\n2:Breath of Frost\n";
   cin >> x;
   castspell(x, turn);
 }
@@ -128,11 +127,12 @@ int main(){
       turn = 0;
     }
     sendroundinfo(turn);
-    cout << "De är " << Spelare[turn].name << "'s tur\n";
     if (turn == 1){
+      cout << "De är " << Spelare[turn].name << "'s tur\n";
       sendclient(turn);
     }
     else{
+      cout << "De är " << Spelare[turn].name << "'s tur\n";
       serverturn(turn);
     }
     turn = turn + 1;

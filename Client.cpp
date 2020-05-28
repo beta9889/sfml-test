@@ -47,15 +47,19 @@ void client (){
 void round(){				
   packet >> Spelare[0];
   packet2 >> Spelare[1];
+  packet.clear();
+  packet2.clear();
   cout << Spelare[0].name << "'s HP: " << Spelare[0].HP << " Mana: " << Spelare[0].Mana << endl; 
   cout << Spelare[1].name << "'s HP: " << Spelare[1].HP << " Mana: " << Spelare[1].Mana << endl; 
   
 
   if(Spelare[0].sendturn == 1){
     int x;
-    cout << "Vill Klienten använda spell \n1:Curse of Madness\n2:Breath of Löfven\n";
+    cout << "Vill Klienten casta spell: \n1:Curse of Madness\n2:Breath of Frost\n";
     cin >> x;
     Spelare[1].val = x;//ska vara 1 sen
+    cout << "x: " << Spelare[1].val << endl;
+    packet << Spelare[0];
     packet2 << Spelare[1];//ska vara 1 sen
 
     if(socket.send(packet) != sf::Socket::Done){
@@ -66,7 +70,7 @@ void round(){
         cout << "error sending message2";
       }
       else {
-        cout << "it worked\n2";
+        cout << "it worked2\n";
       }
     }
   } 
@@ -89,6 +93,7 @@ int main(){
       else{
         round();
         packet.clear();
+        packet2.clear();
       }
     }
   }
