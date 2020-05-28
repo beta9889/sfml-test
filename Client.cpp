@@ -44,7 +44,7 @@ void client (){
   }
 }
 //----------------------------------------------------------
-void round(int loop){				
+void round(){				
   packet >> Spelare[0];
   packet2 >> Spelare[1];
   packet.clear();
@@ -95,7 +95,7 @@ int main(){
         socket.disconnect();
       }
       else{
-        round(loop);
+        round();
         packet.clear();
         packet2.clear();
       }
