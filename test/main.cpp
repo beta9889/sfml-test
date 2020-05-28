@@ -38,8 +38,8 @@ void server (int port){
 
 
 		if(PHP << playerHP){
-			cout << "Your HP packaged\n"; 
-
+			//cout << "Your HP packaged\n"; 
+			
 		}
 		else{
 			cout << "your HP could not be packaged\n";
@@ -49,7 +49,7 @@ void server (int port){
 			cout << "error sending your HP\n"; 
 		}
 		else{
-			cout << "Your HP was sent without problem\n";
+			//cout << "Your HP was sent without problem\n";
 		}
 
 
@@ -59,7 +59,7 @@ void server (int port){
 		}
 
 		else{
-			cout << "opponents HP could not be packaged\n";
+			//cout << "opponents HP could not be packaged\n";
 		}
 
 	
@@ -67,26 +67,26 @@ void server (int port){
 			cout << "error sending message\n";
 		}
 		else{
-			cout << "Opponent HP sent successfully\n";
+			//cout << "Opponent HP sent successfully\n";
 		}
 
 
-		cout << "Do you want to attack\(1\) ,block\(2\) or grapple\(3\)?\n";
+		cout << "Do you want to attack(1) or block(2)?\n";
 
 		getline(cin >> ws ,input);
 		cout << playerHP << endl << opponentHP<<endl;	
 
 		if(message << input){
-		cout << "message packaged\n";
+			//cout << "message packaged\n";
 		}
 		else{
-			cout << "message could not recieve info \n";
+			cout << "message could not be packaged \n";
 		}
 		if(Koppling.send(message) != sf::Socket::Done){
 			cout << "error sending message\n";
 		}
 		else {
-			cout << "message sent\n";
+			//cout << "message sent\n";
 		}
 
 		cout << "Waiting for a responce\n";
@@ -99,17 +99,36 @@ void server (int port){
 			cout << "there was a issue\n";
 		}
 		else{
-			if(message >> input){ 
+			if(message >> output){ 
 				message.clear();	
 	
-				cout <<"you got a responce\n"<< input<<endl;
+			//	cout <<"you got a responce\n"<< output<<endl;
 			}
 		}
-		if (	
-		playerHP =playerHP - 2;
-		opponentHP = opponentHP - 5;
-		if (playerHP <= 0) break;
-		else if (opponentHP <= 0) break;
+		if (input == output) {
+			message <<"Stalemate\n";
+		       	playerHP-1; 
+			opponentHP-1;
+		}	
+		
+		else if( input == "1" && output == "2") {
+			cout << "opponent blocked\n";
+		       	message <<"you blocked\n"; 
+			playerHP =playerHP - 2;
+		}
+		else if(input == "2" && output == "1"){ 
+			cout << "you blocked\n";
+			message << "opponent blocked\n";
+			opponentHP = opponentHP - 2;
+		
+		}
+		else {
+			message << "both need a proper attack";
+			cout << message << endl;
+		}
+
+		if (playerHP <= 0){ cout << "you have lost\n"; break;}
+		else if (opponentHP <= 0) {cout <<"you have won\n";break;}
 	}
 
 	cout << "enter e to exit the program\n";
@@ -141,18 +160,6 @@ void client (int port){
 	int opponentHP=10;	
 
 	for (int i=0;i<10;i++){
-		if(socket.receive(message) != sf::Socket::Done){
-			cout << "error recieving message\n";
-		}
-
-		else{
-			if(message >> output){
-				cout<<" här är medelandet  \"" << output <<"\" "<<endl;
-			}
-
-		}
-
-
 		if(socket.receive(PHP) != sf::Socket::Done){
 			cout << "error recieving Player HP\n";
 		}
@@ -194,8 +201,20 @@ void client (int port){
 			cout << "there was a error\n";
 		}
 	
-		if (playerHP <= 0) break;
-		else if (opponentHP <= 0) break;
+		if(socket.receive(message) != sf::Socket::Done){
+			cout << "error recieving message\n";
+		}
+
+		else{
+			if(message >> output){
+				cout<<"   \"" << output <<"\" "<<endl;
+			}
+
+		}
+
+
+		if (playerHP <= 0){cout << "You lost\n"; break;}
+		else if (opponentHP <= 0) {cout<<"You won\n"; break;}
 		else {playerHP = 0; opponentHP = 0;}
 	}
 	cout <<"enter e to exit the program" <<endl;
