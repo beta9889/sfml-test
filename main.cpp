@@ -54,6 +54,9 @@ void sendendroundinfo(){
 //skicka statsen efter rundan till clienten
   cout << "SKicka härifrån stats and shit\n";
 
+
+  cout << Spelare[0].name << "'s HP: " << Spelare[0].HP << "Mana: " << Spelare[0].Mana << endl; 
+  cout << Spelare[1].name << "'s HP: " << Spelare[1].HP << "Mana: " << Spelare[1].Mana << endl; 
 }
 //-------------------------------------------------------
 void serverturn(int turn){
