@@ -11,12 +11,19 @@ class character
 	public:
 	int hp = 100;
 	void kick(character &server1);
+	void punch(character &client1);
 	void hello();
 
 };
 
 //---------------------------------------------------------------------------
+/*void punch(character &client1)
+{
+	client1.hp = client1.hp - 50;
+	cout << client1.hp << endl;
+	
 
+}*/
 void character::kick(character &server1)
 {
 	server1.hp = server1.hp - 50;
@@ -48,12 +55,6 @@ character func_call;
 		
 		cin >> message[i];
 
-
-		cout << "Kick your opponent?" << endl;
-		//char yn;
-		//cin >> yn;
-		//if(yn == "y"){
-		func_call.kick(server1);
 	}
 	//cin.getline(message,sizeof(message));
 
@@ -71,7 +72,8 @@ character func_call;
 }
 //-------------------------------------------------------------------
 
-void client (int port, character &client1){
+void client (int port, character &server1){
+character func_call;
 	cout << "vilken ip?\n";
 	sf::IpAddress ip;
 	cin >> ip;
@@ -93,23 +95,24 @@ void client (int port, character &client1){
 	}
 	else{
 		cout << message<<endl ;
-		cout << client1.hp << endl;
+		
 	
 
 	}
 	cout <<"enter e to exit the program" <<endl;
 	cin.ignore(256,'e');
-	//socket.disconnect();
+	socket.disconnect();
 }
 //---------------------------------------------------------------------
 
 int main()
 {
 character server1;
-character client1; 
+character client1;
+character func_call;
     
 	int port;
-	port = 52000;
+	port = 51000;
 
 	cout << "server (s)  eller klient (k)? \n";
 	char resultat;
@@ -125,6 +128,15 @@ character client1;
 		client(port, client1);		
 		resultat = null;
     }
+	/*do
+	{
+	func_call.kick(server1);
+	cout << "ENEMY ATTACKING" << endl;
+	func_call.punch(server1);
+	}while(server1.hp >= 0 && client1.hp >= 0);
+	return 0;
+
+}*/
 
     return 0;
 }
